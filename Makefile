@@ -6,17 +6,17 @@
 #    By: lkaser <lkaser@student.42.us.org>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/20 13:52:57 by lkaser            #+#    #+#              #
-#    Updated: 2017/11/02 19:59:12 by lkaser           ###   ########.fr        #
+#    Updated: 2017/11/03 17:00:53 by lkaser           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-LIST = buffer fdf
+LIST = buffer draw hook fdf
 
 SRC = $(addsuffix .c, $(LIST))
 OBJ = $(addsuffix .o, $(LIST))
 
-CFLAGS = -g -Wall -Wextra -Werror -I libft/includes -I libmlx
+CFLAGS = -O3 -Wall -Wextra -Werror -I libft/includes -I libmlx
 
 all: $(NAME) 
 
