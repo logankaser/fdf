@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/03 19:28:50 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/04 17:57:21 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # define WIN_X 1920
 # define WIN_Y 1080
 # define WINDOW_NAME "FDF"
-# define RGB(r,g,b) (r + (g << 8) + (b << 16))
+# define RGB(r,g,b) ((r) + ((g) << 8) + ((b) << 16))
 # define V2(x,y) ((t_vec2){x,y})
 
 typedef struct		s_vec2
@@ -47,12 +47,13 @@ typedef struct		s_ctx
 }					t_ctx;
 
 t_buff				*buffer_create(t_ctx *ctx, unsigned x, unsigned y);
-void				buffer_point(t_buff *b, unsigned x, unsigned y, unsigned color);
+void				buffer_point(t_buff *b,
+						unsigned x, unsigned y, unsigned color);
 void				buffer_blit(t_ctx *ctx, t_buff *b, unsigned x, unsigned y);
 void				buffer_destroy(t_buff *b);
 
 t_ctx				*initalize();
 int					draw(t_ctx *c);
-void				draw_line(t_buff *bf, t_vec2 a, t_vec2 b);
+void				draw_line(t_buff *bf, t_vec2 a, t_vec2 b, unsigned color);
 
 #endif
