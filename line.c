@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/04 17:55:08 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/05 13:24:15 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ static void		swap(double *a, double *b)
 	*a = temp;
 }
 
-static unsigned	shade(unsigned c, double x)
+static unsigned	shade(unsigned c, const double x)
 {
 	unsigned char m;
 
 	(void)c;
-	m = 255 * x;
+	m = 255.0 * x;
 	return (RGB(m, m, m));
 }
 
@@ -53,6 +53,7 @@ void			draw_line_shallow(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)
 	xgap = FPART(b.x + 0.5);
 	buffer_point(buf, xend, floor(yend), shade(c, RFPART(yend) * xgap));
 	buffer_point(buf, xend, floor(yend) + 1, shade(c, FPART(yend) * xgap));
+	a.y += gradient;
 	while (++xstart < xend)
 	{
 		buffer_point(buf, xstart, floor(a.y), shade(c, RFPART(a.y)));
@@ -81,6 +82,7 @@ void			draw_line_steep(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)
 	xgap = FPART(b.x + 0.5);
 	buffer_point(buf, floor(yend), xend, shade(c, RFPART(yend) * xgap));
 	buffer_point(buf, floor(yend) + 1, xend, shade(c, FPART(yend) * xgap));
+	a.y += gradient;
 	while (++xstart < xend)
 	{
 		buffer_point(buf, floor(a.y), xstart, shade(c, RFPART(a.y)));

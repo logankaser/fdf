@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/04 17:57:21 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/05 17:27:02 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,24 @@
 # define WINDOW_NAME "FDF"
 # define RGB(r,g,b) ((r) + ((g) << 8) + ((b) << 16))
 # define V2(x,y) ((t_vec2){x,y})
+# define V3(x,y,z) ((t_vec3){x,y,z})
+# define M3(x0,y0,z0,x1,y1,z1,x2,y2,z2) {{x0,y0,z0},{x1,y1,z1},{x2,y2,z2}}
 
 typedef struct		s_vec2
 {
 	double			x;
 	double			y;
 }					t_vec2;
+
+typedef struct		s_vec3
+{
+	double			x;
+	double			y;
+	double			z;
+}					t_vec3;
+
+typedef double t_mat3[3][3];
+typedef double t_mat4[4][4];
 
 typedef struct		s_buff
 {
