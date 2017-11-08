@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/05 13:24:15 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/07 15:05:07 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,16 @@
 #define FPART(x) (x - floor(x))
 #define RFPART(x) (1 - FPART(x))
 
-static void		swap(double *a, double *b)
+static void		swap(float *a, float *b)
 {
-	double temp;
+	float temp;
 
 	temp = *b;
 	*b = *a;
 	*a = temp;
 }
 
-static unsigned	shade(unsigned c, const double x)
+static unsigned	shade(unsigned c, const float x)
 {
 	unsigned char m;
 
@@ -35,11 +35,11 @@ static unsigned	shade(unsigned c, const double x)
 
 void			draw_line_shallow(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)
 {
-	double gradient;
-	double xend;
-	double yend;
-	double xgap;
-	double xstart;
+	float gradient;
+	float xend;
+	float yend;
+	float xgap;
+	float xstart;
 
 	gradient = b.x - a.x == 0.0 ? 1 : (b.y - a.y) / (b.x - a.x);
 	xend = floor(a.x + 0.5);
@@ -64,11 +64,11 @@ void			draw_line_shallow(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)
 
 void			draw_line_steep(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)
 {
-	double gradient;
-	double xend;
-	double yend;
-	double xgap;
-	double xstart;
+	float gradient;
+	float xend;
+	float yend;
+	float xgap;
+	float xstart;
 
 	gradient = b.x - a.x == 0.0 ? 1 : (b.y - a.y) / (b.x - a.x);
 	xend = floor(a.x + 0.5);
