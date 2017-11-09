@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/08 18:37:45 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/08 19:42:29 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,21 +66,21 @@ t_mat		*mat_x_mat(const t_mat *a, const t_mat *b)
 	return (product);
 }
 
-static void	mat_reduce(float m[4][8], int pivot, int order)
+static void	mat_reduce(float tmp[4][8], int pivot, int order)
 {
 	int i;
 	int j;
 	float factor;
 	
-	factor = m[pivot][pivot];
+	factor = tmp[pivot][pivot];
  	for (i = 0; i < order * 2; i++) {
-		m[pivot][i] /= factor;
+		tmp[pivot][i] /= factor;
 	}
 	for (i = 0; i < order; i++) {
 		if (i != pivot) {
-			factor = m[i][pivot];
+			factor = tmp[i][pivot];
 			for (j = 0; j < order * 2; j++) {
-				m[i][j] = m[i][j] - m[pivot][j] * factor;
+				tmp[i][j] = tmp[i][j] - tmp[pivot][j] * factor;
 			}
 		}
 	}
@@ -98,25 +98,25 @@ t_mat		*mat_inverse(const t_mat *m)
 	int		j;
 
 	i = -1;
-	while (++i < 3)
+	while (++i < m->order)
 	{
 		j = -1;
-		while (++j < 6)
-			if (j < 3)
+		while (++j < m->order * 2)
+			if (j < m->order)
 				tmp[i][j] = m->m[i][j];
 			else
-				tmp[i][j] = j == i + 3;
+				tmp[i][j] = j == i + m->order;
 	}
 	i = -1;
-	while (++i < 3)
-		mat_reduce(tmp, i, 3);
+	while (++i < m->order)
+		mat_reduce(tmp, i, m->order);
 	inv = mat_new(m->order);
 	i = -1;
-	while (++i < 3)
+	while (++i < m->order)
 	{
 		j = -1;
-		while (++j < 3)
-			inv->m[i][j] = tmp[i][j + 3];
+		while (++j < m->order)
+			inv->m[i][j] = tmp[i][j + m->order];
 	}
 	return (inv);
 }
@@ -124,6 +124,17 @@ t_mat		*mat_inverse(const t_mat *m)
 int		main()
 {
 	t_mat	*M = mat_new(3);
+	M->m[0][0] = 2;
+	M->m[0][1] = 9;
+	M->m[0][2] = -5;
+
+	M->m[1][0] = 0;
+	M->m[1][1] = -2;
+	M->m[1][2] = 1;
+	
+	M->m[2][0] = -1;
+	M->m[2][1] = -3;
+	M->m[2][2] = 3;
 	int		i = -1;
 	int		j;
 	t_mat	*p;
@@ -136,11 +147,11 @@ int		main()
 		{
 			if (p->m[i][j] >= 0)
 				ft_putchar(' ');
-			ft_putnbr(p->m[i][j]);
-			if (j != 2)
-				ft_putstr(", ");
+			printf("%f", p->m[i][j]);
+			if (j == 2)
+				printf("\n");
 			else
-				ft_putstr(" \n");
+				printf(", ");
 		}
 	}
 	mat_del(p);
