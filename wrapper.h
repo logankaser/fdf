@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/07 18:42:14 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/08 18:14:36 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@
 # define RGB(r,g,b) ((r) + ((g) << 8) + ((b) << 16))
 # define V2(x,y) ((t_vec2){x,y})
 # define V3(x,y,z) ((t_vec3){x,y,z})
-# define M3(a,b,c,d,e,f,g,h,i) {{a,b,c},{d,e,f},{g,h,i}}
 
 typedef struct		s_vec2
 {
@@ -37,8 +36,12 @@ typedef struct		s_vec3
 	float			z;
 }					t_vec3;
 
-typedef float t_mat3[3][3];
-typedef float t_mat4[4][4];
+
+typedef struct		s_mat
+{
+	int				order;
+	float			**m;
+}					t_mat;
 
 typedef struct		s_buff
 {

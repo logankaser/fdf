@@ -6,55 +6,67 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/07 20:17:01 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/08 18:37:45 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wrapper.h"
 #include <math.h>
 
-t_mat3	*mat3_x_mat3(const t_mat3 a, const t_mat3 b)
+t_mat		*mat_new(int order)
+{
+	t_mat	*new;
+	int		i;
+	int 	j;
+
+	new = malloc(sizeof(t_mat));
+	new->order = order;
+	new->m = malloc(sizeof(float *) * order);
+	i = -1;
+	while (++i < order)
+	{
+		new->m[i] = malloc(sizeof(float) * order);
+		j = -1;
+		while (++j < order)
+			new->m[i][j] = i == j;
+	}
+	return (new);
+}
+
+void	mat_del(t_mat *m)
+{
+	int		i;
+
+	i = -1;
+	while (++i < m->order)
+		free(m->m[i]);
+	free(m->m);
+	free(m);
+}
+
+t_mat		*mat_x_mat(const t_mat *a, const t_mat *b)
 {
 	int			i;
 	int			j;
-	t_mat3		*product;
+	int 		k;
+	t_mat		*product;
 
-	product = malloc(sizeof(t_mat3));
+	product = mat_new(a->order);
 	i = -1;
-	while (++i < 3)
+	while (++i < a->order)
 	{
 		j = -1;
-		while (++j < 3)
-			*product[i][j] =
-				a[i][0] * b[0][j] +
-				a[i][1] * b[1][j] +
-				a[i][2] * b[2][j];
+		while (++j < a->order)
+		{
+			k = -1;
+			while (++k < a->order)
+				product->m[i][j] += a->m[i][k] * b->m[k][j];
+		}
 	}
 	return (product);
 }
 
-t_mat4	*mat4_x_mat4(const t_mat4 a, const t_mat4 b)
-{
-	int			i;
-	int			j;
-	t_mat4		*product;
-
-	product = malloc(sizeof(t_mat4));
-	i = -1;
-	while (++i < 4)
-	{
-		j = -1;
-		while (++j < 4)
-			*product[i][j] =
-				a[i][0] * b[0][j] +
-				a[i][1] * b[1][j] +
-				a[i][2] * b[2][j] +
-				a[i][3] * b[3][j];
-	}
-	return (product);
-}
-
-static void	mat_reduce(float **m, int pivot, int order)
+static void	mat_reduce(float m[4][8], int pivot, int order)
 {
 	int i;
 	int j;
@@ -75,77 +87,63 @@ static void	mat_reduce(float **m, int pivot, int order)
 }
 
 /*
-** Only for square matrix.
+** Only for square matrix of order 4 and lower.
 */
 
-t_mat3	*mat3_inverse(const t_mat3 m)
+t_mat		*mat_inverse(const t_mat *m)
 {
-	float	**tmp;
-	t_mat3	*inv;
+	float	tmp[4][8];
+	t_mat	*inv;
 	int		i;
 	int		j;
 
-	ASSERT(tmp = malloc(sizeof(float *) * 3));
 	i = -1;
 	while (++i < 3)
 	{
-		ASSERT(tmp[i] = malloc(sizeof(float) * 6));
 		j = -1;
 		while (++j < 6)
-		{
 			if (j < 3)
-				tmp[i][j] = m[i][j];
+				tmp[i][j] = m->m[i][j];
 			else
 				tmp[i][j] = j == i + 3;
-			ft_putnbr(tmp[i][j]);
-			ft_putchar(' ');
-			if (j == 5)
-				ft_putchar('\n');
-		}
 	}
 	i = -1;
 	while (++i < 3)
 		mat_reduce(tmp, i, 3);
-	ASSERT(inv = malloc(sizeof(t_mat3)));
+	inv = mat_new(m->order);
 	i = -1;
 	while (++i < 3)
 	{
 		j = -1;
 		while (++j < 3)
-			*inv[i][j] = tmp[i][j + 3];
-		free(tmp[i]);
+			inv->m[i][j] = tmp[i][j + 3];
 	}
-	free(tmp);
 	return (inv);
 }
 
 int		main()
 {
-	t_mat3	M = M3( 1, 3, 1,
-				    1, 1, 2,
-				    2, 3, 4);
-	t_mat3	N = M3( 2, 9,-5,
-				    0,-2, 1,
-				   -1,-3, 2);
+	t_mat	*M = mat_new(3);
 	int		i = -1;
 	int		j;
-	t_mat3	*p;
+	t_mat	*p;
 
-	p = mat3_x_mat3(M, N);
+	p = mat_inverse(M);
 	while (++i < 3)
 	{
 		j = -1;
 		while (++j < 3)
 		{
-			if (*p[i][j] >= 0)
+			if (p->m[i][j] >= 0)
 				ft_putchar(' ');
-			ft_putnbr(*p[i][j]);
+			ft_putnbr(p->m[i][j]);
 			if (j != 2)
 				ft_putstr(", ");
 			else
 				ft_putstr(" \n");
 		}
 	}
-	free(p);
+	mat_del(p);
+	mat_del(M);
 	return (0);
 }

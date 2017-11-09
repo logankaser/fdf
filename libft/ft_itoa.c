@@ -6,17 +6,18 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/21 14:38:16 by lkaser            #+#    #+#             */
-/*   Updated: 2017/10/30 03:20:51 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/08 16:05:46 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 static unsigned	digits(int nbr)
 {
 	unsigned len;
 
-	len = nbr < 0;
+	len = 1 + nbr < 0;
 	while (nbr /= 10)
 		++len;
 	return (len);
@@ -30,7 +31,7 @@ static void		fill_str(long nbr, char *str, unsigned *i)
 		fill_str(nbr % 10, str, i);
 	}
 	else
-		str[*i++] = '0' + (nbr < 0 ? -nbr : nbr);
+		str[(*i)++] = '0' + (nbr < 0 ? -nbr : nbr);
 }
 
 char			*ft_itoa(long nbr)

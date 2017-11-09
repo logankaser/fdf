@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/21 14:48:28 by lkaser            #+#    #+#             */
-/*   Updated: 2017/09/21 15:07:41 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/08 16:41:16 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 void	ft_putendl_fd(char const *str, int fd)
 {
-	char n;
-
-	n = '\n';
-	while (*str)
-		write(fd, str++, 1);
-	write(fd, &n, 1);
+	ft_putstr_fd(str, fd);
+	ft_putchar_fd('\n', fd);
 }
