@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/08 18:14:36 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/09 15:58:45 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ typedef struct		s_vec3
 	float			y;
 	float			z;
 }					t_vec3;
-
 
 typedef struct		s_mat
 {
@@ -71,4 +70,8 @@ t_ctx				*initalize();
 int					draw(t_ctx *c);
 void				draw_line(t_buff *bf, t_vec2 a, t_vec2 b, unsigned color);
 
+t_mat				*mat_new(int order);
+void				mat_del(t_mat *m);
+t_mat				*mat_x_mat(const t_mat *a, const t_mat *b);
+t_mat				*mat_inverse(const t_mat *m);
 #endif

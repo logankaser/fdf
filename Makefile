@@ -6,7 +6,7 @@
 #    By: lkaser <lkaser@student.42.us.org>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/20 13:52:57 by lkaser            #+#    #+#              #
-#    Updated: 2017/11/04 17:48:35 by lkaser           ###   ########.fr        #
+#    Updated: 2017/11/09 15:51:16 by lkaser           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,10 @@ $(NAME): $(OBJ)
 	make -C libft
 	make -C libmlx
 	gcc $(CFLAGS) -L libft -L libmlx -lmlx -framework OpenGL -framework AppKit -lft $(SRC) -o $(NAME)
+
+lib:
+	make -C libft
+	make -C libmlx
 
 clean:
 	make -C libft clean
