@@ -1,34 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hook.c                                             :+:      :+:    :+:   */
+/*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/09 19:57:31 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/09 20:23:42 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#define ASSERT_FAIL ft_puterror("Error initializing libmlx!");exit(1)
 #include "wrapper.h"
+#include <math.h>
 
-int			hook_exit(int code)
+void	vec3_x_mat(t_vec3 v, t_mat *m, t_vec3 *result)
 {
-	if (code == 53)
-		exit(0);
-	return(0);
-}
+	float w;
 
-t_ctx		*initalize()
-{
-	t_ctx	*c;
-
-	ASSERT(c = malloc(sizeof(t_ctx)));
-	ASSERT(c->mlx = mlx_init());
-	ASSERT(c->win = mlx_new_window(c->mlx, WIN_X, WIN_Y, WINDOW_NAME));
-	c->buffs = NULL;
-	c->view = mat_new(4);
-	mlx_key_hook(c->win, hook_exit, NULL);
-	return (c);
+	result->x = v.x * m->m[0][0] + v.y * m->m[1][0] + v.z * m->m[2][0] + m->m[3][0];
+	result->y = v.x * m->m[0][1] + v.y * m->m[1][1] + v.z * m->m[2][1] + m->m[3][1];
+	result->z = v.x * m->m[0][2] + v.y * m->m[1][2] + v.z * m->m[2][2] + m->m[3][2];
+	w = v.x * m->m[0][3] + v.y * m->m[1][3] + v.z * m->m[2][3] + m->m[3][3];
+	if (w != 1 && w)
+	{
+		result->x /= w;
+		result->y /= w;
+		result->z /= w;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/01 18:15:18 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/09 16:54:49 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdio.h>
 # include <unistd.h>
 # define NULL_GUARD(a) if(!(a)) return (NULL);
-# define ASSERT(a) if (!(a)) ASSERT_FAIL
+# define ASSERT(a) if (!(a)) {ASSERT_FAIL;}
 
 void				*ft_memset(void *ptr, int val, size_t n);
 void				ft_bzero(void *ptr, size_t b);

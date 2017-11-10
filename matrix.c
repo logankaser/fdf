@@ -6,10 +6,11 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/09 15:55:14 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/09 16:43:01 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#define ASSERT_FAIL ft_puterror("Matrix error!");exit(1)
 #include "wrapper.h"
 #include <math.h>
 

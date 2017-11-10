@@ -6,13 +6,13 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/04 17:48:22 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/09 19:12:02 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wrapper.h"
 
-int			draw(t_ctx *c)
+int			blit(t_ctx *c)
 {
 	t_list *bfs;
 
