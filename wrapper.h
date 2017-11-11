@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/09 20:25:27 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/10 19:56:10 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,8 @@ typedef struct		s_vec3
 typedef struct		s_mat
 {
 	int				order;
-	float			**m;
+	float			m[4][4];
 }					t_mat;
-
-typedef struct		s_buff
-{
-	int				depth;
-	int				width;
-	int				endianess;
-	int				x;
-	int				y;
-	void			*obj;
-	char			*data;
-}					t_buff;
 
 typedef struct		s_ctx
 {
@@ -63,25 +52,37 @@ typedef struct		s_ctx
 	t_list			*buffs;
 }					t_ctx;
 
+typedef struct		s_buff
+{
+	t_ctx			*ctx;
+	int				depth;
+	int				width;
+	int				endianess;
+	int				x;
+	int				y;
+	void			*obj;
+	char			*data;
+}					t_buff;
+
 typedef struct		s_tuple
 {
 	void			*fst;
 	void			*snd;
 }					t_tuple;
 
-t_buff				*buffer_create(t_ctx *ctx, unsigned x, unsigned y);
+t_buff				*buffer_new(t_ctx *c, unsigned x, unsigned y);
 void				buffer_point(t_buff *b,
 						unsigned x, unsigned y, unsigned color);
-void				buffer_blit(t_ctx *ctx, t_buff *b, unsigned x, unsigned y);
-void				buffer_destroy(t_buff *b);
+void				buffer_blit(t_buff *b, unsigned x, unsigned y);
+void				buffer_del(t_buff *b);
 
 t_ctx				*initalize();
-int					blit(t_ctx *c);
+int					blit_all(t_ctx *c);
 void				draw_line(t_buff *bf, t_vec2 a, t_vec2 b, unsigned color);
 
 t_mat				*mat_new(int order);
 void				mat_del(t_mat *m);
 t_mat				*mat_x_mat(const t_mat *a, const t_mat *b);
-t_mat				*mat_inverse(const t_mat *m);
-void				vec3_x_mat(t_vec3 v, t_mat *m, t_vec3 *result);
+void				mat_inverse(const t_mat *m, t_mat *r);
+void				vec3_x_mat(t_vec3 v, t_mat *m, t_vec3 *r);
 #endif

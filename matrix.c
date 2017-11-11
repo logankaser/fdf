@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/09 16:43:01 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/10 19:55:56 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,9 @@ t_mat		*mat_new(int order)
 
 	new = malloc(sizeof(t_mat));
 	new->order = order;
-	new->m = malloc(sizeof(float *) * order);
 	i = -1;
 	while (++i < order)
 	{
-		new->m[i] = malloc(sizeof(float) * order);
 		j = -1;
 		while (++j < order)
 			new->m[i][j] = i == j;
@@ -95,10 +93,9 @@ static void	mat_reduce(float tmp[4][8], int pivot, int order)
 ** Only for square matrix of order 4 and lower.
 */
 
-t_mat		*mat_inverse(const t_mat *m)
+void		mat_inverse(const t_mat *m, t_mat *r)
 {
 	float	tmp[4][8];
-	t_mat	*inv;
 	int		i;
 	int		j;
 
@@ -113,12 +110,10 @@ t_mat		*mat_inverse(const t_mat *m)
 	while (++i < m->order)
 		mat_reduce(tmp, i, m->order);
 	i = -1;
-	inv = mat_new(m->order);
 	while (++i < m->order)
 	{
 		j = -1;
 		while (++j < m->order)
-			inv->m[i][j] = tmp[i][j + m->order];
+			r->m[i][j] = tmp[i][j + m->order];
 	}
-	return (inv);
 }

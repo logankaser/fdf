@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/09 20:30:36 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/10 19:53:48 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,14 @@ t_vec3 **read_map(char *mapfile)
 	t_vec3 **map;
 
 	(void)mapfile;
-	map = malloc(sizeof(t_vec3*) * 2);
+	map = malloc(sizeof(t_vec3*) * 3);
 	map[0] = malloc(sizeof(t_vec3) * 2);
 	map[1] = malloc(sizeof(t_vec3) * 2);
 	map[0][0] = V3(0,0,1);
 	map[0][1] = V3(1,0,1);
 	map[1][0] = V3(0,1,1);
 	map[1][1] = V3(1,1,1);
+	map[2] = NULL;
 	return (map);
 }
 
@@ -48,27 +49,42 @@ void	read_map(char *mapfile)
 }
 */
 
+/*
+** Perspective projection.
+** Matrix math is done on the stack for speed.
+*/
+
 int		draw(t_tuple *state)
 {
 	t_vec3	**map = state->snd;
 	t_ctx	*c = state->fst;
-	t_mat	*to_view;
-	t_vec3	view;
-	t_vec2	raster;
+	t_mat	to_view;
+	t_vec3	pos;
 
-	to_view = mat_inverse(c->view);
-	vec3_x_mat(map[0][0], to_view, &view);
-	mat_del(to_view);
-	raster.x = view.x / -view.z;
-	raster.y = view.y / -view.z;
-	raster.x = floor(((raster.x + CANVAS_X / 2) / CANVAS_X) * WIN_X);
-	raster.y = floor((1 - ((raster.y + CANVAS_Y / 2) / CANVAS_Y)) * WIN_Y);
-	ft_putnbr(raster.x);
+	mat_inverse(c->view, &to_view);
+	vec3_x_mat(map[0][0], &to_view, &pos);
+	pos.x = pos.x / -pos.z;
+	pos.y = pos.y / -pos.z;
+	if (fabsf(pos.x) > CANVAS_X / 2 || fabsf(pos.y) > CANVAS_Y / 2)
+		return (0);
+	pos.x = ((pos.x + CANVAS_X * 0.5) / CANVAS_X) * WIN_X;
+	pos.y = (1 - ((pos.y + CANVAS_Y * 0.5) / CANVAS_Y)) * WIN_Y;
+	buffer_point(c->buffs->content, (int)pos.x, (int)pos.y, 0xFFFFFF);
+	blit_all(c);
+	return (0);
+}
+
+/*
+int		mouse_hook(int x,int y, void *param)
+{
+	(void)param;
+	ft_putnbr(x);
 	ft_putchar(' ');
-	ft_putnbr(raster.y);
+	ft_putnbr(y);
 	ft_putchar('\n');
 	return (0);
 }
+*/
 
 int		main(int argc, char **argv)
 {
@@ -79,11 +95,10 @@ int		main(int argc, char **argv)
 	(void)argc;
 	map = read_map(argv[1]);
 	c = initalize();
-	ft_lstpush(&c->buffs, buffer_create(c, WIN_X, WIN_Y), sizeof(t_buff));
-	draw_line(c->buffs->content, V2(700, 500), V2(1200, 550), 0xFFFFFF);
+	ft_lstpush(&c->buffs, buffer_new(c, WIN_X, WIN_Y), sizeof(t_buff));
 	state = malloc(sizeof(t_tuple));
 	*state = T(c,map);
 	mlx_loop_hook(c->mlx, draw, state);
-	mlx_expose_hook(c->win, blit, c);
+	//mlx_hook(c->win, 6, 0, mouse_hook, NULL);
 	mlx_loop(c->mlx);
 }

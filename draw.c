@@ -6,20 +6,20 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/09 19:12:02 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/10 18:32:59 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "wrapper.h"
 
-int			blit(t_ctx *c)
+int			blit_all(t_ctx *c)
 {
 	t_list *bfs;
 
 	bfs = c->buffs;
 	while (bfs)
 	{
-		buffer_blit(c, bfs->content, 0, 0);
+		buffer_blit(bfs->content, 0, 0);
 		bfs = bfs->next;
 	}
 	return (0);
