@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/12 17:28:47 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/12 19:06:51 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,19 @@ t_map *read_map(char *mapfile, t_ctx *c)
 	map = malloc(sizeof(t_map));
 	map->c = c;
 	map->width = 4;
+	map->data = NULL;
 	row = malloc(sizeof(t_vec3) * 4);
-	row[0] = V3(0,0,0);
-	row[1] = V3(0,0,0);
-	row[2] = V3(0,0,0);
-	row[3] = V3(0,0,0);
-	ft_lstpush(&map->data, row, sizeof(t_vec3) * 4);
+	row[0] = V3(0.1,0,1);
+	row[1] = V3(0.2,0,1);
+	row[2] = V3(0.3,0,1);
+	row[3] = V3(0.4,0,1);
+	ft_lstpush(&map->data, row, sizeof(row));
+	row = malloc(sizeof(t_vec3) * 4);
+	row[0] = V3(0.1,0.1,1);
+	row[1] = V3(0.2,0.1,1);
+	row[2] = V3(0.3,0.1,1);
+	row[3] = V3(0.4,0.1,1);
+	ft_lstpush(&map->data, row, sizeof(row));
 	(void)mapfile;
 	return (map);
 }
@@ -41,21 +48,36 @@ static t_bool	project(t_mat *to_view, t_vec3 pos, t_vec2 *raster)
 	pos.y /= -pos.z;
 	if (fabsf(pos.x) > CANVAS_X / 2 || fabsf(pos.y) > CANVAS_Y / 2)
 		return (0);
-	raster->x = ((pos.x + CANVAS_X * 0.5) / CANVAS_X) * WIN_X;
-	raster->y = (1 - ((pos.y + CANVAS_Y * 0.5) / CANVAS_Y)) * WIN_Y;
+	raster->x = floor(((pos.x + CANVAS_X * 0.5) / CANVAS_X) * WIN_X);
+	raster->y = floor((1 - ((pos.y + CANVAS_Y * 0.5) / CANVAS_Y)) * WIN_Y);
 	return (1);
 }
 
 int		draw(t_map *map)
 {
 	t_mat	to_view;
-	t_vec2	raster;
+	t_vec2	a;
+	t_vec2	b;
+	t_list	*row;
+	int		i;
 
+	row = map->data;
 	mat_inverse(map->c->view, &to_view);
-	raster.x = 0;
-	raster.y = 0;
-	(void)project;
-	buffer_point(map->c->buffs->content, (int)raster.x, (int)raster.y, 0xFFFFFF);
+	while (row)
+	{
+		i = -1;
+		while (++i < map->width - 1)
+		{
+			if (!project(&to_view, ((t_vec3*)row->content)[i], &a)
+				|| !project(&to_view, ((t_vec3*)row->content)[i + 1], &b))
+				continue;
+			draw_line(map->c->buffs->content, a, b, 0xFFFFFF);
+			if (row->next)
+				if (project(&to_view, ((t_vec3*)row->next->content)[i], &b))
+					draw_line(map->c->buffs->content, a, b, 0xFFFFFF);
+		}
+		row = row->next;
+	}
 	blit_all(map->c);
 	return (0);
 }

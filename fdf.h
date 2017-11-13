@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/12 17:26:39 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/12 18:46:24 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 typedef struct		s_map
 {
 	t_ctx			*c;
-	unsigned		width;
+	int				width;
 	t_list			*data;
 }					t_map;
 

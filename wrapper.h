@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/10 19:56:10 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/12 19:01:40 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 # include "libft.h"
 # include "mlx.h"
 
-# define WIN_X 1920
-# define WIN_Y 1080
+# define WIN_X 1024
+# define WIN_Y 1024
 # define CANVAS_X 2
 # define CANVAS_Y 2
 # define WINDOW_NAME "FDF"
