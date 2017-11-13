@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/09 16:54:49 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/12 16:18:50 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # define NULL_GUARD(a) if(!(a)) return (NULL);
 # define ASSERT(a) if (!(a)) {ASSERT_FAIL;}
 
+typedef char		t_bool;
 void				*ft_memset(void *ptr, int val, size_t n);
 void				ft_bzero(void *ptr, size_t b);
 void				*ft_memcpy(void *dst, const void *src, size_t b);

@@ -6,12 +6,12 @@
 #    By: lkaser <lkaser@student.42.us.org>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/20 13:52:57 by lkaser            #+#    #+#              #
-#    Updated: 2017/11/10 19:39:16 by lkaser           ###   ########.fr        #
+#    Updated: 2017/11/11 16:27:24 by lkaser           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-LIST = buffer draw line hook matrix vector fdf
+LIST = buffer line hook matrix vector fdf
 
 SRC = $(addsuffix .c, $(LIST))
 OBJ = $(addsuffix .o, $(LIST))

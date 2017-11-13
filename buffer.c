@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/10 18:32:38 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/11 16:27:14 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@ t_buff		*buffer_new(t_ctx *c, unsigned x, unsigned y)
 	return (b);
 }
 
+void		buffer_del(t_buff *b)
+{
+	mlx_destroy_image(b->ctx->mlx, b->obj);
+	free(b);
+}
+
 void		buffer_point(t_buff *b, unsigned x, unsigned y, unsigned color)
 {
 	char *data;
@@ -39,8 +45,15 @@ void		buffer_blit(t_buff *b, unsigned x, unsigned y)
 	mlx_put_image_to_window(b->ctx->mlx, b->ctx->win, b->obj, x, y);
 }
 
-void		buffer_del(t_buff *b)
+int			blit_all(t_ctx *c)
 {
-	mlx_destroy_image(b->ctx->mlx, b->obj);
-	free(b);
+	t_list *bfs;
+
+	bfs = c->buffs;
+	while (bfs)
+	{
+		buffer_blit(bfs->content, 0, 0);
+		bfs = bfs->next;
+	}
+	return (0);
 }
