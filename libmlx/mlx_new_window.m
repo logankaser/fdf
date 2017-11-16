@@ -89,7 +89,7 @@ int get_mouse_button(NSEventType eventtype)
 			[self setAcceptsMouseMovedEvents:NO];
 		else
 		{
-			//CGAssociateMouseAndMouseCursorPosition(NO); //FIXME Grap mouse.
+			CGAssociateMouseAndMouseCursorPosition(NO);
 			[self setAcceptsMouseMovedEvents:YES];
 		}
 	}
@@ -245,6 +245,7 @@ int get_mouse_button(NSEventType eventtype)
     event_funct[5](button, (int)(thepoint.x), size_y - 1 - (int)(thepoint.y), event_param[5]);
 }
 
+/*
 - (void) mouseMoved:(NSEvent *)theEvent
 {
   NSPoint thepoint;
@@ -254,13 +255,12 @@ int get_mouse_button(NSEventType eventtype)
   if (event_funct[6] != NULL)
     event_funct[6]((int)(thepoint.x), size_y - 1 - (int)(thepoint.y), event_param[6]);
 }
+*/
 
-/*
 - (void) mouseMoved:(NSEvent *)theEvent
 {
   NSPoint thepoint;
 
-  thepoint = [theEvent locationInWindow];
   CGFloat deltaX = [theEvent deltaX];
   CGFloat deltaY = [theEvent deltaY];
   thepoint.x += deltaX;
@@ -269,7 +269,7 @@ int get_mouse_button(NSEventType eventtype)
   if (event_funct[6] != NULL)
     event_funct[6]((int)(deltaX), (int)(deltaY), event_param[6]);
 }
-*/
+
 
 - (void) mouseDragged:(NSEvent *)theEvent
 {

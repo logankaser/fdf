@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:32:35 by lkaser            #+#    #+#             */
-/*   Updated: 2017/10/24 16:38:54 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/13 16:28:59 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,20 @@ void	*ft_memset(void *m, int value, size_t size)
 	unsigned bit;
 
 	bit = 0;
-	while (bit < size)
-		((unsigned char *)m)[bit++] = (unsigned char)value;
+	if (!(size % 8))
+	{
+		size /= 8;
+		while (bit < size)
+			((unsigned long long*)m)[bit++] = (unsigned long long)value;
+	}
+	else if (!(size % 4))
+	{
+		size /= 4;
+		while (bit < size)
+			((unsigned*)m)[bit++] = (unsigned)value;
+	}
+	else
+		while (bit < size)
+			((unsigned char *)m)[bit++] = (unsigned char)value;
 	return (m);
 }

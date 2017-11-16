@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/10 19:57:56 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/15 12:47:18 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,14 @@ static void		swap(float *a, float *b)
 
 static unsigned	shade(unsigned c, const float x)
 {
-	unsigned char m;
+	unsigned char r;
+	unsigned char g;
+	unsigned char b;
 
-	(void)c;
-	m = 255.0 * x;
-	return (RGB(m, m, m));
+	r = (c & 0xFF) * x;
+	g = (c >> 8 & 0xFF) * x;
+	b = (c >> 16 & 0xFF) * x;
+	return (RGB(r,g,b));
 }
 
 void			draw_line_shallow(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)
@@ -86,7 +89,7 @@ void			draw_line_steep(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)
 	while (++xstart < xend)
 	{
 		buffer_point(buf, floor(a.y), xstart, shade(c, RFPART(a.y)));
-		buffer_point(buf, floor(a.y), xstart + 1, shade(c, FPART(a.y)));
+		buffer_point(buf, floor(a.y) + 1, xstart, shade(c, FPART(a.y)));
 		a.y += gradient;
 	}
 }

@@ -6,44 +6,76 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/12 19:06:51 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/15 20:49:26 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
+#define ASSERT_FAIL ft_puterror("Error reading map.\n");exit(1)
 #include "wrapper.h"
 #include "fdf.h"
 #include <fcntl.h>
 #include <math.h>
 
-t_map *read_map(char *mapfile, t_ctx *c)
+static t_vec3	*parse_line(t_map *map, char *l, int y)
 {
-	t_map	*map;
-	t_vec3 *row;
+	int			i;
+	int			x;
+	unsigned	len;
+	t_vec3		*row;
+
+	i = -1;
+	len = 0;
+	while (l[++i])
+		if ((l[i] < '0' || l[i] > '9') &&
+			((l[i + 1] >= '0' && l[i + 1] <= '9') || !l[i + 1]))
+			++len;
+	row = malloc(sizeof(t_vec3) * len);
+	i = 0;
+	x = 0;
+	while(l[i])
+	{
+		row[x] = V3(x, ft_atoi(l + i) * 0.1, y);
+		while (l[i] && l[i] == ' ')
+			++i;
+		while (l[i] && l[i + 1] >= '0' && l[i + 1] <= '9')
+			++i;
+		if (l[i])
+			++i;
+		++x;
+	}
+	ASSERT((map->width ? map->width == x : 1) && (map->width = x) > 1);
+	return (row);
+}
+
+static t_map	*read_map(char *mapfile)
+{
+	t_map		*map;
+	int			fd;
+	char		*line;
+	int			y;
+	int			ret;
 
 	map = malloc(sizeof(t_map));
-	map->c = c;
-	map->width = 4;
+	map->width = 0;
 	map->data = NULL;
-	row = malloc(sizeof(t_vec3) * 4);
-	row[0] = V3(0.1,0,1);
-	row[1] = V3(0.2,0,1);
-	row[2] = V3(0.3,0,1);
-	row[3] = V3(0.4,0,1);
-	ft_lstpush(&map->data, row, sizeof(row));
-	row = malloc(sizeof(t_vec3) * 4);
-	row[0] = V3(0.1,0.1,1);
-	row[1] = V3(0.2,0.1,1);
-	row[2] = V3(0.3,0.1,1);
-	row[3] = V3(0.4,0.1,1);
-	ft_lstpush(&map->data, row, sizeof(row));
-	(void)mapfile;
+	line = NULL;
+	fd = open(mapfile, O_RDONLY);
+	y = 0;
+	while ((ret = get_next_line(fd, &line)) > 0)
+	{
+		ASSERT(ft_str_has_only(line, " \n0123456789"));
+		ft_lstpush(&map->data, parse_line(map, line, y), sizeof(t_vec3*));
+		free(line);
+		line = NULL;
+		++y;
+	}
+	ASSERT(ret >= 0 && map->width > 1);
 	return (map);
 }
 
 static t_bool	project(t_mat *to_view, t_vec3 pos, t_vec2 *raster)
 {
-	vec3_x_mat(pos, to_view, &pos);
+	pos = vec3_x_mat(pos, to_view);
 	pos.x /= -pos.z;
 	pos.y /= -pos.z;
 	if (fabsf(pos.x) > CANVAS_X / 2 || fabsf(pos.y) > CANVAS_Y / 2)
@@ -53,7 +85,7 @@ static t_bool	project(t_mat *to_view, t_vec3 pos, t_vec2 *raster)
 	return (1);
 }
 
-int		draw(t_map *map)
+int				draw(t_map *map)
 {
 	t_mat	to_view;
 	t_vec2	a;
@@ -66,46 +98,46 @@ int		draw(t_map *map)
 	while (row)
 	{
 		i = -1;
-		while (++i < map->width - 1)
+		while (++i < map->width)
 		{
-			if (!project(&to_view, ((t_vec3*)row->content)[i], &a)
-				|| !project(&to_view, ((t_vec3*)row->content)[i + 1], &b))
+			if (!project(&to_view, ((t_vec3*)row->content)[i], &a))
 				continue;
-			draw_line(map->c->buffs->content, a, b, 0xFFFFFF);
-			if (row->next)
-				if (project(&to_view, ((t_vec3*)row->next->content)[i], &b))
-					draw_line(map->c->buffs->content, a, b, 0xFFFFFF);
+			if (i + 1 < map->width
+				&& project(&to_view, ((t_vec3*)row->content)[i + 1], &b))
+				draw_line(map->c->buffs->content, a, b, 0x0000FF);
+			if (row->next && project(&to_view, ((t_vec3*)row->next->content)[i], &b))
+				draw_line(map->c->buffs->content, a, b, 0xFF0000);
 		}
 		row = row->next;
 	}
 	blit_all(map->c);
 	return (0);
 }
-
 /*
-int		mouse_hook(int x,int y, void *param)
+int		mouse_hook(int x,int y, t_ctx *c)
 {
-	(void)param;
-	ft_putnbr(x);
-	ft_putchar(' ');
-	ft_putnbr(y);
-	ft_putchar('\n');
+	static float	h = 0;
+	static float	v = 0;
+
+	v += y * MOUSE_SPEED;
+	h += x * MOUSE_SPEED;
+	look_at(c, V3(cos(v) * sin(h), sin(v), cos(v) * cos(h)));
 	return (0);
 }
 */
-
-int		main(int argc, char **argv)
+int				main(int argc, char **argv)
 {
 	t_ctx	*c;
 	t_map	*map;
 
 	if (argc == 2)
 	{
+		map = read_map(argv[1]);
 		c = initalize();
-		map = read_map(argv[1], c);
+		map->c = c;
 		ft_lstpush(&c->buffs, buffer_new(c, WIN_X, WIN_Y), sizeof(t_buff));
 		mlx_loop_hook(c->mlx, draw, map);
-		//mlx_hook(c->win, 6, 0, mouse_hook, NULL);
+		//mlx_hook(c->win, 6, 0, mouse_hook, c);
 		mlx_loop(c->mlx);
 	}
 }

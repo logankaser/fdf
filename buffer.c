@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/11 16:27:14 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/13 16:21:44 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void		buffer_point(t_buff *b, unsigned x, unsigned y, unsigned color)
 void		buffer_blit(t_buff *b, unsigned x, unsigned y)
 {
 	mlx_put_image_to_window(b->ctx->mlx, b->ctx->win, b->obj, x, y);
+	ft_bzero(b->data, b->width * b->y);
 }
 
 int			blit_all(t_ctx *c)
