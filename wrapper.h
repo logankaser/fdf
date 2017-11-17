@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/17 14:33:21 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/17 14:46:35 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,8 @@ void				buffer_blit(t_buff *b, unsigned x, unsigned y);
 void				buffer_del(t_buff *b);
 
 t_ctx				*initalize();
+int					hook_mouse(int x, int y, t_ctx *c);
+int					hook_keys(int keycode, t_ctx *c);
 int					blit_all(t_ctx *c);
 void				draw_line(t_buff *bf, t_vec2 a, t_vec2 b, unsigned color);
 

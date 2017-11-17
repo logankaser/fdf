@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/17 14:39:48 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/17 14:44:21 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ t_ctx		*initalize(void)
 	c->pos = V3(0, 0, 0);
 	c->yaw = 0;
 	c->pitch = 0;
-	mlx_hook(c->win, 2, 0, hook_keys, c);
-	mlx_hook(c->win, 6, 0, hook_mouse, c);
 	c->past_time = time(NULL);
 	return (c);
 }

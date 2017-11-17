@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/17 14:11:56 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/17 14:44:46 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,8 @@ int				main(int argc, char **argv)
 		c = initalize();
 		map->c = c;
 		ft_lstpush(&c->buffs, buffer_new(c, WIN_X, WIN_Y), sizeof(t_buff));
+		mlx_hook(c->win, 2, 0, hook_keys, c);
+		mlx_hook(c->win, 6, 0, hook_mouse, c);
 		mlx_loop_hook(c->mlx, draw, map);
 		mlx_loop(c->mlx);
 	}
