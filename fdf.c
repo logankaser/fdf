@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/17 14:44:46 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/17 15:14:47 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static t_vec3	*parse_line(t_map *map, char *l, int y)
 	x = -1;
 	while (l[i] && ++x < len)
 	{
-		row[x] = V3(x, ft_atoi(l + i) * 0.2, y);
+		row[x] = V3(x, ft_atoi(l + i), y);
 		while (l[i] && l[i] == ' ')
 			++i;
 		while (l[i] && (ft_in_range(l[i + 1], '0', '9') || l[i + 1] == '-'))
@@ -102,9 +102,9 @@ int				draw(t_map *map)
 				continue;
 			if (i + 1 < map->width
 				&& project(&world, ((t_vec3*)r->content)[i + 1], &b))
-				draw_line(map->c->buffs->content, a, b, 0x0000FF);
+				draw_line(map->c->buffs->content, a, b, 0x0F0FFF);
 			if (r->next && project(&world, ((t_vec3*)r->next->content)[i], &b))
-				draw_line(map->c->buffs->content, a, b, 0xFF0000);
+				draw_line(map->c->buffs->content, a, b, 0xFF0F0F);
 		}
 		r = r->next;
 	}
