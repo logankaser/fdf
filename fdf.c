@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/16 19:00:17 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/17 14:11:56 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static t_map	*read_map(char *mapfile)
 	y = 0;
 	while ((ret = get_next_line(fd, &line)) > 0)
 	{
-		ASSERT(ft_str_has_only(line, " \n-0123456789"));
+		ASSERT(ft_str_has_only(line, " -0123456789"));
 		ft_lstpush(&map->data, parse_line(map, line, y), sizeof(t_vec3*));
 		free(line);
 		line = NULL;
@@ -92,7 +92,7 @@ int				draw(t_map *map)
 	int		i;
 
 	r = map->data;
-	mat_inverse(map->c->view, &world);
+	world = *map->c->view;
 	while (r)
 	{
 		i = -1;

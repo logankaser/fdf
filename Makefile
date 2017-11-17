@@ -6,7 +6,7 @@
 #    By: lkaser <lkaser@student.42.us.org>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2017/04/20 13:52:57 by lkaser            #+#    #+#              #
-#    Updated: 2017/11/16 14:44:42 by lkaser           ###   ########.fr        #
+#    Updated: 2017/11/17 14:33:39 by lkaser           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIST = buffer line hook matrix vector fdf
 SRC = $(addsuffix .c, $(LIST))
 OBJ = $(addsuffix .o, $(LIST))
 
-CFLAGS = -g -Wall -Wextra -Werror -I libft/includes -I libmlx
+CFLAGS = -O3 -Wall -Wextra -Werror -I libft/includes -I libmlx
 
 all: $(NAME) 
 

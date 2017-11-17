@@ -6,35 +6,42 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/16 19:06:09 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/17 14:39:48 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #define ASSERT_FAIL ft_puterror("Error initializing libmlx!");exit(1)
 #include "wrapper.h"
+#include <math.h>
 
-void		look_at(t_ctx *c, const t_vec3 direction)
+void		set_view(t_vec3 pos, float yaw, float pitch, t_mat *v)
 {
-	t_vec3	forward;
-	t_vec3	right;
-	t_vec3	up;
-	t_vec3	from;
-	t_vec3	to;
+	float	cos_pitch;
+	float	cos_yaw;
+	t_vec3	x_ax;
+	t_vec3	y_ax;
+	t_vec3	z_ax;
 
-	from = V3(c->view->m[3][0], c->view->m[3][1], c->view->m[3][2]);
-	to = V3_PLUS_V3(from, direction);
-	forward = vec3_normalize(V3_MINUS_V3(from, to));
-	right = vec3_cross_product(V3(0, 1, 0), forward);
-	up = vec3_cross_product(forward, right);
-	c->view->m[0][0] = right.x;
-	c->view->m[0][1] = right.y;
-	c->view->m[0][2] = right.z;
-	c->view->m[1][0] = up.x;
-	c->view->m[1][1] = up.y;
-	c->view->m[1][2] = up.z;
-	c->view->m[2][0] = forward.x;
-	c->view->m[2][1] = forward.y;
-	c->view->m[2][2] = forward.z;
+	cos_pitch = cos(pitch);
+	cos_yaw = cos(yaw);
+	pitch = sin(pitch);
+	yaw = sin(yaw);
+	x_ax = V3(cos_yaw, 0, -yaw);
+	y_ax = V3(yaw * pitch, cos_pitch, cos_yaw * pitch);
+	z_ax = V3(yaw * cos_pitch, -pitch, cos_pitch * cos_yaw);
+	MAT_ROW(v->m[0], x_ax.x, y_ax.x, z_ax.x, 0);
+	MAT_ROW(v->m[1], x_ax.y, y_ax.y, z_ax.y, 0);
+	MAT_ROW(v->m[2], x_ax.z, y_ax.z, z_ax.z, 0);
+	MAT_ROW(v->m[3],
+	-V3_DOT(x_ax, pos), -V3_DOT(y_ax, pos), -V3_DOT(z_ax, pos), 1);
+}
+
+int			hook_mouse(int x, int y, t_ctx *c)
+{
+	c->yaw += x * MOUSE_SPEED;
+	c->pitch += y * MOUSE_SPEED;
+	set_view(c->pos, c->yaw, c->pitch, c->view);
+	return (0);
 }
 
 static void	del_buff(t_list *elem)
@@ -42,7 +49,7 @@ static void	del_buff(t_list *elem)
 	buffer_del(elem->content);
 }
 
-int			hook_exit(int key, t_ctx *c)
+int			hook_keys(int key, t_ctx *c)
 {
 	if (key == 53)
 	{
@@ -55,18 +62,18 @@ int			hook_exit(int key, t_ctx *c)
 		exit(0);
 	}
 	if (key == 13)
-		c->view->m[3][2] += 0.05;
+		c->pos.z -= 0.1;
 	if (key == 1)
-		c->view->m[3][2] -= 0.05;
+		c->pos.z += 0.1;
 	if (key == 0)
-		c->view->m[3][0] += 0.05;
+		c->pos.x -= 0.1;
 	if (key == 2)
-		c->view->m[3][0] -= 0.05;
+		c->pos.x += 0.1;
 	if (key == 49)
-		c->view->m[3][1] += 0.05;
+		c->pos.y += 0.1;
 	if (key == 256)
-		c->view->m[3][1] -= 0.05;
-	look_at(c, V3(5, -2, 5));
+		c->pos.y -= 0.1;
+	set_view(c->pos, c->yaw, c->pitch, c->view);
 	return (0);
 }
 
@@ -79,7 +86,11 @@ t_ctx		*initalize(void)
 	ASSERT(c->win = mlx_new_window(c->mlx, WIN_X, WIN_Y, WINDOW_NAME));
 	c->buffs = NULL;
 	c->view = mat_new(4);
-	mlx_hook(c->win, 2, 0, hook_exit, c);
+	c->pos = V3(0, 0, 0);
+	c->yaw = 0;
+	c->pitch = 0;
+	mlx_hook(c->win, 2, 0, hook_keys, c);
+	mlx_hook(c->win, 6, 0, hook_mouse, c);
 	c->past_time = time(NULL);
 	return (c);
 }

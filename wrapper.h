@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/15 12:43:11 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/17 14:33:21 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,14 @@
 # define CANVAS_X 2
 # define CANVAS_Y 2
 # define WINDOW_NAME "FDF"
+# define MOUSE_SPEED 0.02
 # define RGB(r,g,b) ((b) + ((g) << 8) + ((r) << 16))
 # define V2(x,y) ((t_vec2){x,y})
 # define V3(x,y,z) ((t_vec3){x,y,z})
 # define V3_MINUS_V3(a,b) (V3(a.x - b.x, a.y - b.y, a.z - b.z))
 # define V3_PLUS_V3(a,b) (V3(a.x + b.x, a.y + b.y, a.z + b.z))
+# define V3_DOT(a,b) (a.x * b.x + a.y * b.y + a.z * b.z)
+# define MAT_ROW(m,x,y,z,w) m[0] = x;m[1] = y;m[2] = z;m[3] = w
 
 typedef struct		s_vec2
 {
@@ -51,6 +54,9 @@ typedef struct		s_ctx
 	void			*mlx;
 	void			*win;
 	t_mat			*view;
+	t_vec3			pos;
+	float			yaw;
+	float			pitch;
 	t_list			*buffs;
 	time_t			past_time;
 }					t_ctx;
@@ -74,7 +80,6 @@ void				buffer_blit(t_buff *b, unsigned x, unsigned y);
 void				buffer_del(t_buff *b);
 
 t_ctx				*initalize();
-void				look_at(t_ctx *c, const t_vec3 direction);
 int					blit_all(t_ctx *c);
 void				draw_line(t_buff *bf, t_vec2 a, t_vec2 b, unsigned color);
 
