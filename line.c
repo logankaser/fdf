@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/15 12:47:18 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/16 18:37:55 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static unsigned	shade(unsigned c, const float x)
 	r = (c & 0xFF) * x;
 	g = (c >> 8 & 0xFF) * x;
 	b = (c >> 16 & 0xFF) * x;
-	return (RGB(r,g,b));
+	return (RGB(r, g, b));
 }
 
 void			draw_line_shallow(t_buff *buf, t_vec2 a, t_vec2 b, unsigned c)

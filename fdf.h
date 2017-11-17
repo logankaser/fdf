@@ -6,14 +6,13 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/14 19:02:25 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/16 18:57:55 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-# define MOUSE_SPEED 0.05
 typedef struct		s_map
 {
 	t_ctx			*c;

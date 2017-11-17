@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/09/18 11:03:56 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/15 14:46:06 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/16 14:07:22 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ void				ft_putstrarray(char **str);
 void				ft_putintarray(int *int_array, size_t size);
 void				ft_putmem(char *varname, void *var, size_t bytes);
 int					ft_sumarray(int *int_array, size_t size);
+t_bool				ft_in_range(const int i, const int low, const int high);
 
 # define GNL_BUFF 1024
 

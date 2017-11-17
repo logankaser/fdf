@@ -6,7 +6,7 @@
 /*   By: lkaser <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/02 15:44:27 by lkaser            #+#    #+#             */
-/*   Updated: 2017/11/15 20:49:26 by lkaser           ###   ########.fr       */
+/*   Updated: 2017/11/16 18:56:30 by lkaser           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,30 +18,28 @@
 
 static t_vec3	*parse_line(t_map *map, char *l, int y)
 {
-	int			i;
-	int			x;
-	unsigned	len;
-	t_vec3		*row;
+	int		i;
+	int		x;
+	int		len;
+	t_vec3	*row;
 
 	i = -1;
 	len = 0;
 	while (l[++i])
-		if ((l[i] < '0' || l[i] > '9') &&
-			((l[i + 1] >= '0' && l[i + 1] <= '9') || !l[i + 1]))
+		if (l[i] == ' ' &&
+			(ft_in_range(l[i + 1], '0', '9') || !l[i + 1] || l[i + 1] == '-'))
 			++len;
 	row = malloc(sizeof(t_vec3) * len);
 	i = 0;
-	x = 0;
-	while(l[i])
+	x = -1;
+	while (l[i] && ++x < len)
 	{
-		row[x] = V3(x, ft_atoi(l + i) * 0.1, y);
+		row[x] = V3(x, ft_atoi(l + i) * 0.2, y);
 		while (l[i] && l[i] == ' ')
 			++i;
-		while (l[i] && l[i + 1] >= '0' && l[i + 1] <= '9')
+		while (l[i] && (ft_in_range(l[i + 1], '0', '9') || l[i + 1] == '-'))
 			++i;
-		if (l[i])
-			++i;
-		++x;
+		i = l[i] ? i + 1 : 0;
 	}
 	ASSERT((map->width ? map->width == x : 1) && (map->width = x) > 1);
 	return (row);
@@ -63,7 +61,7 @@ static t_map	*read_map(char *mapfile)
 	y = 0;
 	while ((ret = get_next_line(fd, &line)) > 0)
 	{
-		ASSERT(ft_str_has_only(line, " \n0123456789"));
+		ASSERT(ft_str_has_only(line, " \n-0123456789"));
 		ft_lstpush(&map->data, parse_line(map, line, y), sizeof(t_vec3*));
 		free(line);
 		line = NULL;
@@ -78,53 +76,42 @@ static t_bool	project(t_mat *to_view, t_vec3 pos, t_vec2 *raster)
 	pos = vec3_x_mat(pos, to_view);
 	pos.x /= -pos.z;
 	pos.y /= -pos.z;
-	if (fabsf(pos.x) > CANVAS_X / 2 || fabsf(pos.y) > CANVAS_Y / 2)
+	if (fabsf(pos.x) >= CANVAS_X / 2.01 || fabsf(pos.y) >= CANVAS_Y / 2.01)
 		return (0);
-	raster->x = floor(((pos.x + CANVAS_X * 0.5) / CANVAS_X) * WIN_X);
-	raster->y = floor((1 - ((pos.y + CANVAS_Y * 0.5) / CANVAS_Y)) * WIN_Y);
+	raster->x = ((pos.x + CANVAS_X * 0.5) / CANVAS_X) * WIN_X;
+	raster->y = (1 - ((pos.y + CANVAS_Y * 0.5) / CANVAS_Y)) * WIN_Y;
 	return (1);
 }
 
 int				draw(t_map *map)
 {
-	t_mat	to_view;
+	t_mat	world;
 	t_vec2	a;
 	t_vec2	b;
-	t_list	*row;
+	t_list	*r;
 	int		i;
 
-	row = map->data;
-	mat_inverse(map->c->view, &to_view);
-	while (row)
+	r = map->data;
+	mat_inverse(map->c->view, &world);
+	while (r)
 	{
 		i = -1;
 		while (++i < map->width)
 		{
-			if (!project(&to_view, ((t_vec3*)row->content)[i], &a))
+			if (!project(&world, ((t_vec3*)r->content)[i], &a))
 				continue;
 			if (i + 1 < map->width
-				&& project(&to_view, ((t_vec3*)row->content)[i + 1], &b))
+				&& project(&world, ((t_vec3*)r->content)[i + 1], &b))
 				draw_line(map->c->buffs->content, a, b, 0x0000FF);
-			if (row->next && project(&to_view, ((t_vec3*)row->next->content)[i], &b))
+			if (r->next && project(&world, ((t_vec3*)r->next->content)[i], &b))
 				draw_line(map->c->buffs->content, a, b, 0xFF0000);
 		}
-		row = row->next;
+		r = r->next;
 	}
 	blit_all(map->c);
 	return (0);
 }
-/*
-int		mouse_hook(int x,int y, t_ctx *c)
-{
-	static float	h = 0;
-	static float	v = 0;
 
-	v += y * MOUSE_SPEED;
-	h += x * MOUSE_SPEED;
-	look_at(c, V3(cos(v) * sin(h), sin(v), cos(v) * cos(h)));
-	return (0);
-}
-*/
 int				main(int argc, char **argv)
 {
 	t_ctx	*c;
@@ -137,7 +124,6 @@ int				main(int argc, char **argv)
 		map->c = c;
 		ft_lstpush(&c->buffs, buffer_new(c, WIN_X, WIN_Y), sizeof(t_buff));
 		mlx_loop_hook(c->mlx, draw, map);
-		//mlx_hook(c->win, 6, 0, mouse_hook, c);
 		mlx_loop(c->mlx);
 	}
 }
