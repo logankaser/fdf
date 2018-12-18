@@ -3,41 +3,76 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lkaser <lkaser@student.42.us.org>          +#+  +:+       +#+         #
+#    By: logan  <logan@42.us.org>                   +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2017/04/20 13:52:57 by lkaser            #+#    #+#              #
-#    Updated: 2017/11/17 15:00:51 by lkaser           ###   ########.fr        #
+#    Created: 2018/03/13 10:03:24 by logan             #+#    #+#              #
+#    Updated: 2018/12/17 20:21:35 by lkaser           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-LIST = fdf fdf_line buffer hook matrix vector
+LIST = buffer \
+fdf \
+fdf_line \
+hook \
+matrix \
+vector
+
+OBJ_DIR = obj
+VPATH = src
 
 SRC = $(addsuffix .c, $(LIST))
-OBJ = $(addsuffix .o, $(LIST))
+OBJ = $(addsuffix .o, $(addprefix $(OBJ_DIR)/, $(LIST)))
+DEP = $(OBJ:%.o=%.d)
+CC = clang
+SUB = libft libmlx
 
-CFLAGS = -O3 -Wall -Wextra -Werror -I libft/includes -I libmlx
+INCLUDES = -I libft/includes -I src -I libmlx
 
-all: $(NAME) 
+CPPFLAGS = -Wall -Wextra -Werror -g -O2 -march=native \
+$(INCLUDES) \
+#-fsanitize=address -fsanitize=undefined
+
+LDFLAGS = -L libft -lft -L libmlx -lmlx -framework OpenGL -framework AppKit \
+-flto=thin
+#-fsanitize=address -fsanitize=undefined
+
+all: $(NAME)
 
 $(NAME): $(OBJ)
-	make -C libft
-	make -C libmlx
-	gcc $(CFLAGS) -L libft -L libmlx -lmlx -framework OpenGL -framework AppKit -lft $(SRC) -o $(NAME)
+	@for s in $(SUB);\
+	do\
+		make -sC $$s;\
+	done
+	@printf "\e[32;1mLinking.. \e[0m\n"
+	$(CC) $(LDFLAGS) -o $@ $^
+	@printf "\e[32;1mCreated:\e[0m %s\n" $(NAME)
 
-lib:
-	make -C libft
-	make -C libmlx
+$(OBJ_DIR):
+	@mkdir -p $(OBJ_DIR)
+
+-include $(DEP)
+
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
+	@printf "\e[34;1mCompiling: \e[0m%s\n" $<
+	$(CC) $(CPPFLAGS) -MMD -c $< -o $@
 
 clean:
-	make -C libft clean
-	make -C libmlx clean
-	rm -f $(OBJ)
+	@for s in $(SUB);\
+	do\
+		make -sC $$s clean;\
+	done
+	@printf "\e[31;1mCleaning..\e[0m\n"
+	@rm -rf $(OBJ_DIR)
 
 fclean: clean
-	make -C libft fclean
-	make -C libmlx fclean
-	rm -f $(NAME)
+	@for s in $(SUB);\
+	do\
+		make -sC $$s fclean;\
+	done
+	@printf "\e[31;1mFull Cleaning..\e[0m\n"
+	@rm -f $(NAME)
+	@rm -rf $(NAME).dSYM
 
 re:	fclean all
 
